@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Iron Ledger</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=Archivo:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --iron:#16140f; --panel:#201c15; --panel2:#262117;
+    --chalk:#ece4d3; --chalk-dim:#a89e8a;
+    --brass:#c9a24b; --brass-hi:#e3c06a; --brass-line:rgba(201,162,75,.28);
+    --ember:#c05b2e; --rehab:#d08b2c;
+    --done:#9db26a;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{background:var(--iron);}
+  body{
+    font-family:'Archivo',sans-serif; color:var(--chalk); background:var(--iron);
+    background-image:radial-gradient(ellipse at 50% -10%, rgba(201,162,75,.07), transparent 60%);
+    min-height:100vh; padding:20px 16px 64px; max-width:680px; margin:0 auto;
+  }
+  .eyebrow{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.22em; color:var(--brass); text-transform:uppercase;}
+  header{display:flex; justify-content:space-between; align-items:flex-start; border-bottom:1px solid var(--brass-line); padding-bottom:14px; margin-bottom:20px;}
+  h1{font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:34px; letter-spacing:.03em; text-transform:uppercase; line-height:1;}
+  h1 span{color:var(--brass);}
+  .datebox{text-align:right;}
+  .datebox .d{font-family:'IBM Plex Mono',monospace; font-size:12px; color:var(--chalk-dim);}
+
+  .hero{display:flex; justify-content:space-between; align-items:stretch; gap:14px; margin-bottom:22px;}
+  .todaycard{flex:1;}
+  .todaycard .label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.2em; color:var(--chalk-dim); text-transform:uppercase; margin-bottom:4px;}
+  .todaycard .day{font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:64px; line-height:.95; text-transform:uppercase; color:var(--chalk);}
+  .rotdots{display:flex; gap:8px; margin-top:10px; align-items:center;}
+  .rotdots .dot{width:9px; height:9px; border-radius:50%; border:1px solid var(--brass); opacity:.4;}
+  .rotdots .dot.on{background:var(--brass); opacity:1; box-shadow:0 0 8px rgba(201,162,75,.6);}
+  .rotdots .rd-label{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--chalk-dim); margin-left:4px; letter-spacing:.1em;}
+
+  .streak{background:var(--panel); border:1px solid var(--brass-line); border-radius:6px; padding:12px 18px; text-align:center; min-width:120px; display:flex; flex-direction:column; justify-content:center;}
+  .streak .n{font-family:'Big Shoulders Display',sans-serif; font-weight:900; font-size:56px; line-height:1; color:var(--brass-hi);}
+  .streak .t{font-family:'IBM Plex Mono',monospace; font-size:10px; letter-spacing:.18em; text-transform:uppercase; color:var(--chalk-dim); margin-top:2px;}
+  .streak .best{font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--chalk-dim); margin-top:8px; border-top:1px dashed var(--brass-line); padding-top:6px;}
+
+  .status{margin-bottom:22px; padding:10px 14px; border-radius:5px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.14em; text-transform:uppercase; border:1px solid var(--brass-line); color:var(--chalk-dim); display:flex; align-items:center; gap:10px;}
+  .status.hit{border-color:var(--done); color:var(--done);}
+  .status .pip{width:8px; height:8px; border-radius:50%; background:currentColor;}
+
+  section{margin-bottom:26px;}
+  .sec-title{font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; letter-spacing:.06em; color:var(--brass); margin-bottom:10px;}
+
+  .card{background:var(--panel); border:1px solid rgba(201,162,75,.16); border-radius:6px; overflow:hidden;}
+  .ex{display:flex; align-items:center; gap:14px; padding:13px 14px; border-bottom:1px solid rgba(201,162,75,.1); cursor:pointer; user-select:none; transition:background .15s;}
+  .ex:last-child{border-bottom:none;}
+  .ex:hover{background:var(--panel2);}
+  .ex .box{width:24px; height:24px; min-width:24px; border:2px solid var(--brass); border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--iron); background:transparent; transition:background .15s;}
+  .ex.checked .box{background:var(--brass);}
+  .ex .nm{font-weight:600; font-size:15px;}
+  .ex .dt{font-size:12.5px; color:var(--chalk-dim); margin-top:2px; line-height:1.35;}
+  .ex.checked .nm, .ex.checked .dt{text-decoration:line-through; opacity:.55;}
+
+  .cutline{display:flex; align-items:center; gap:10px; padding:8px 14px; background:var(--iron);}
+  .cutline .rule{flex:1; border-top:1px dashed var(--brass);}
+  .cutline .txt{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.16em; text-transform:uppercase; color:var(--brass-hi); white-space:nowrap;}
+  .cutline .scis{color:var(--brass); font-size:13px;}
+
+  .rehab-banner{display:flex; gap:10px; align-items:flex-start; background:rgba(208,139,44,.09); border:1px solid rgba(208,139,44,.4); border-radius:5px; padding:10px 12px; margin-bottom:10px; font-size:12.5px; color:var(--rehab); line-height:1.45;}
+
+  .squatlog{display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--panel2); border-top:1px solid var(--brass-line);}
+  .squatlog label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--chalk-dim);}
+  .squatlog input{width:80px; background:var(--iron); color:var(--brass-hi); border:1px solid var(--brass-line); border-radius:4px; padding:7px 9px; font-family:'IBM Plex Mono',monospace; font-size:15px;}
+  .squatlog button{background:var(--brass); color:var(--iron); border:none; border-radius:4px; padding:8px 14px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .squatlog .last{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--chalk-dim); margin-left:auto;}
+
+  .grid-wrap{background:var(--panel); border:1px solid rgba(201,162,75,.16); border-radius:6px; padding:14px;}
+  .heat{display:grid; grid-template-rows:repeat(7,12px); grid-auto-flow:column; grid-auto-columns:12px; gap:3px;}
+  .heat .c{width:12px; height:12px; border-radius:2px; background:#2a251b;}
+  .heat .c.hit{background:var(--brass);}
+  .heat .c.part{background:#6b5a2c;}
+  .heat .c.today{outline:1.5px solid var(--chalk);}
+  .legend{display:flex; gap:14px; margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--chalk-dim); align-items:center;}
+  .legend .sw{width:10px; height:10px; border-radius:2px; display:inline-block; margin-right:5px; vertical-align:-1px;}
+
+  .spark{width:100%; height:90px; display:block;}
+  .spark-note{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); margin-top:6px;}
+
+  .settings{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--chalk-dim); border-top:1px solid var(--brass-line); padding-top:14px;}
+  .settings input[type=date]{background:var(--panel); color:var(--chalk); border:1px solid var(--brass-line); border-radius:4px; padding:6px 8px; font-family:'IBM Plex Mono',monospace; font-size:12px;}
+  .settings label{font-family:'IBM Plex Mono',monospace; font-size:10.5px; letter-spacing:.12em; text-transform:uppercase;}
+  @media (prefers-reduced-motion: reduce){ *{transition:none !important;} }
+  @media (max-width:480px){
+    .todaycard .day{font-size:48px;}
+    .streak .n{font-size:44px;}
+    h1{font-size:26px;}
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <div class="eyebrow">Skinner Enterprises · Basement Division</div>
+    <h1>The <span>Iron</span> Ledger</h1>
+  </div>
+  <div class="datebox">
+    <div class="d" id="dateStr"></div>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="todaycard">
+    <div class="label">Today's Session</div>
+    <div class="day" id="dayName"></div>
+    <div class="rotdots" id="rotdots"></div>
+  </div>
+  <div class="streak">
+    <div class="n" id="streakN">0</div>
+    <div class="t">Day Streak</div>
+    <div class="best" id="bestN">Best · 0</div>
+  </div>
+</div>
+
+<div class="status" id="statusBar"><span class="pip"></span><span id="statusTxt">Goal open — hit every 10-minute item + the daily baseline</span></div>
+
+<section>
+  <div class="sec-title">Daily Baseline — Non-negotiable</div>
+  <div class="card" id="baselineList"></div>
+</section>
+
+<section>
+  <div class="sec-title" id="liftTitle">Lift</div>
+  <div id="rehabSlot"></div>
+  <div class="card" id="liftList"></div>
+</section>
+
+<section>
+  <div class="sec-title">Last 12 Weeks</div>
+  <div class="grid-wrap">
+    <div class="heat" id="heat"></div>
+    <div class="legend">
+      <span><span class="sw" style="background:var(--brass)"></span>Goal hit</span>
+      <span><span class="sw" style="background:#6b5a2c"></span>Partial</span>
+      <span><span class="sw" style="background:#2a251b"></span>Missed</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="sec-title">Squat Rehab — Load Over Time</div>
+  <div class="grid-wrap">
+    <svg class="spark" id="spark" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
+    <div class="spark-note" id="sparkNote">Log your squat load on leg days. Bar + 2.5s each side = 50 lb.</div>
+  </div>
+</section>
+
+<div class="settings">
+  <label for="anchor">Rotation Day 1 (Chest) anchor date</label>
+  <input type="date" id="anchor">
+  <span style="font-family:'IBM Plex Mono',monospace; font-size:10px;">Changing this re-maps which day is which — history is kept.</span>
+</div>
+
+<script>
+const PLAN = {
+  "baseline": [
+    {
+      "id": "lymph",
+      "name": "Lymph circuit v2 (~6 min)",
+      "detail": "In order: 10 deep belly breaths → neck rolls + shrugs x5/way → arm circles x20/way → overhead reach-to-knee x15 → torso twists x30 → heel bounces 60s → clap-under knee lifts x20 → ankle pumps x20. Central first, limbs after"
+    },
+    {
+      "id": "vsits",
+      "name": "100 V-sits",
+      "detail": "Break into sets as needed — all 100 count"
+    },
+    {
+      "id": "knee",
+      "name": "Knee care (3 min)",
+      "detail": "Band terminal knee extensions x15/side + wall sit 2×30s — pain-free, every single day. Daily dosing is what rebuilds the knee"
+    },
+    {
+      "id": "plank",
+      "name": "Plank 60s",
+      "detail": "One minute total (2×30s fine) — balances the v-sits and braces your spine for heavy bench/rows/squats"
+    },
+    {
+      "id": "protein",
+      "name": "Protein target",
+      "detail": "~1g per lb of bodyweight today — the lifts only build what the protein pays for"
+    }
+  ],
+  "rotation": [
+    {
+      "day": "Chest + Back",
+      "exercises": [
+        {
+          "id": "c1",
+          "tier": 1,
+          "name": "Barbell bench press",
+          "detail": "4×6–8, rack safeties set — superset with the rows"
+        },
+        {
+          "id": "b1",
+          "tier": 1,
+          "name": "One-arm DB row",
+          "detail": "4×8–10/side, between bench sets"
+        },
+        {
+          "id": "c2",
+          "tier": 2,
+          "name": "DB incline press",
+          "detail": "3×8–10"
+        },
+        {
+          "id": "b3",
+          "tier": 2,
+          "name": "Band lat pulldown",
+          "detail": "3×12–15, band over top of rack — width without a pull-up bar"
+        },
+        {
+          "id": "c3",
+          "tier": 3,
+          "name": "DB flye",
+          "detail": "3×12, slow negatives"
+        },
+        {
+          "id": "b4",
+          "tier": 3,
+          "name": "DB pullover",
+          "detail": "3×10 across bench"
+        },
+        {
+          "id": "s4",
+          "tier": 3,
+          "name": "Band face pull",
+          "detail": "3×15 — shoulder health insurance for all this pressing"
+        }
+      ]
+    },
+    {
+      "day": "Legs + Shoulders",
+      "rehab": true,
+      "exercises": [
+        {
+          "id": "l1",
+          "tier": 1,
+          "name": "Box squat (rehab load)",
+          "detail": "4×8 pain-free only — superset with the presses"
+        },
+        {
+          "id": "s1",
+          "tier": 1,
+          "name": "Seated DB overhead press",
+          "detail": "4×6–8 between squat sets — seated keeps you under the 7 ft ceiling"
+        },
+        {
+          "id": "l2",
+          "tier": 2,
+          "name": "Romanian deadlift",
+          "detail": "3×8, hinge not squat — knee-friendly"
+        },
+        {
+          "id": "s2",
+          "tier": 2,
+          "name": "DB lateral raise",
+          "detail": "3×12–15"
+        },
+        {
+          "id": "l3",
+          "tier": 3,
+          "name": "DB hip thrust",
+          "detail": "3×10, shoulders on bench"
+        },
+        {
+          "id": "s3",
+          "tier": 3,
+          "name": "Rear-delt flye",
+          "detail": "3×15, chest on incline bench"
+        },
+        {
+          "id": "l5",
+          "tier": 3,
+          "name": "Standing calf raise",
+          "detail": "3×20"
+        }
+      ]
+    }
+  ],
+  "tiers": {
+    "1": "Shower in 10? Stop here",
+    "2": "Got 25 minutes? Stop here",
+    "3": "Full session"
+  }
+};
+
+const KEY = "ironLedger.v1";
+function todayKey(d){ const x = d || new Date(); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); }
+function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
+function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
+
+let state = load();
+if(!state.anchorDate) state.anchorDate = todayKey();
+if(!state.history) state.history = {};
+save(state);
+
+function dayIndexFor(dateStr){
+  const a = new Date(state.anchorDate + "T12:00:00");
+  const d = new Date(dateStr + "T12:00:00");
+  const diff = Math.round((d - a) / 86400000);
+  const L = PLAN.rotation.length; return ((diff % L) + L) % L;
+}
+
+function dayRecord(dateStr){
+  if(!state.history[dateStr]) state.history[dateStr] = { checks:{} };
+  return state.history[dateStr];
+}
+
+function isHit(dateStr){
+  const rec = state.history[dateStr];
+  if(!rec) return "miss";
+  const idx = dayIndexFor(dateStr);
+  const t1 = PLAN.rotation[idx].exercises.filter(e=>e.tier===1);
+  const t1done = t1.every(e=>rec.checks[e.id]);
+  const baseDone = PLAN.baseline.every(b=>rec.checks[b.id]);
+  if(t1done && baseDone) return "hit";
+  const any = Object.values(rec.checks).some(v=>v);
+  return any ? "part" : "miss";
+}
+
+function computeStreaks(){
+  let cur = 0;
+  const t = todayKey();
+  // current streak: today counts if hit; otherwise start from yesterday
+  let d = new Date();
+  if(isHit(t) !== "hit") d.setDate(d.getDate()-1);
+  while(isHit(todayKey(d)) === "hit"){ cur++; d.setDate(d.getDate()-1); }
+  // best streak across history
+  const dates = Object.keys(state.history).sort();
+  let best = cur;
+  if(dates.length){
+    let run = 0, prev = null;
+    let cursor = new Date(dates[0] + "T12:00:00");
+    const end = new Date();
+    while(cursor <= end){
+      const k = todayKey(cursor);
+      if(isHit(k) === "hit"){ run++; if(run > best) best = run; } else { run = 0; }
+      cursor.setDate(cursor.getDate()+1);
+    }
+  }
+  return { cur, best };
+}
+
+// ---------- render ----------
+const tKey = todayKey();
+const tIdx = dayIndexFor(tKey);
+const todayPlan = PLAN.rotation[tIdx];
+const rec = dayRecord(tKey);
+
+document.getElementById("dateStr").textContent = new Date().toLocaleDateString("en-US",{weekday:"short", month:"short", day:"numeric", year:"numeric"});
+document.getElementById("dayName").textContent = todayPlan.day + " Day";
+document.getElementById("liftTitle").textContent = todayPlan.day + " — by priority";
+document.getElementById("anchor").value = state.anchorDate;
+document.getElementById("anchor").addEventListener("change", e=>{ state.anchorDate = e.target.value; save(state); location.reload(); });
+
+const rot = document.getElementById("rotdots");
+PLAN.rotation.forEach((r,i)=>{
+  const dot = document.createElement("div");
+  dot.className = "dot" + (i===tIdx ? " on":"");
+  rot.appendChild(dot);
+});
+const rl = document.createElement("span"); rl.className="rd-label";
+rl.textContent = "DAY " + (tIdx+1) + " OF " + PLAN.rotation.length;
+rot.appendChild(rl);
+
+if(todayPlan.rehab){
+  document.getElementById("rehabSlot").innerHTML =
+    '<div class="rehab-banner">⚠ Knee rehab rules: pain-free reps only. If anything sharp shows up, rack it and do the band + hip work instead — the day still counts.</div>';
+}
+
+function exRow(e){
+  const div = document.createElement("div");
+  div.className = "ex" + (rec.checks[e.id] ? " checked":"");
+  const w = window.PROG && window.PROG.weights && window.PROG.weights[e.id];
+  const unit = w != null && window.PROG.lifts && window.PROG.lifts[e.id] ? window.PROG.lifts[e.id].unit : "lb";
+  const wtag = (w != null) ? '<span style="color:var(--brass-hi); font-family:\'IBM Plex Mono\',monospace;">'+ (Number.isInteger(w)? w : w) +' '+unit+' · </span>' : '';
+  div.innerHTML = '<div class="box">✓</div><div><div class="nm">'+e.name+'</div><div class="dt">'+wtag+e.detail+'</div></div>';
+  div.addEventListener("click", ()=>{
+    rec.checks[e.id] = !rec.checks[e.id];
+    save(state); render();
+  });
+  return div;
+}
+
+function cutline(txt){
+  const d = document.createElement("div");
+  d.className = "cutline";
+  d.innerHTML = '<span class="scis">✂</span><span class="txt">'+txt+'</span><span class="rule"></span>';
+  return d;
+}
+
+function render(){
+  const base = document.getElementById("baselineList"); base.innerHTML = "";
+  PLAN.baseline.forEach(b=>base.appendChild(exRow(b)));
+
+  const lift = document.getElementById("liftList"); lift.innerHTML = "";
+  [1,2,3].forEach(tier=>{
+    const items = todayPlan.exercises.filter(e=>e.tier===tier);
+    if(!items.length) return;
+    items.forEach(e=>lift.appendChild(exRow(e)));
+    if(tier < 3) lift.appendChild(cutline(PLAN.tiers[tier]));
+  });
+
+  if(todayPlan.rehab){
+    const sq = document.createElement("div");
+    sq.className = "squatlog";
+    const last = lastSquat();
+    sq.innerHTML = '<label>Squat load</label><input type="number" id="sqIn" step="2.5" placeholder="lb" value="'+(rec.squat||"")+'"><button id="sqBtn">Log</button><span class="last">'+(last ? "Last: "+last+" lb" : "First log")+'</span>';
+    lift.appendChild(sq);
+    sq.querySelector("#sqBtn").addEventListener("click", ()=>{
+      const v = parseFloat(sq.querySelector("#sqIn").value);
+      if(!isNaN(v)){ rec.squat = v; save(state); render(); }
+    });
+  }
+
+  const st = isHit(tKey);
+  const bar = document.getElementById("statusBar");
+  bar.className = "status" + (st==="hit" ? " hit":"");
+  document.getElementById("statusTxt").textContent = st==="hit"
+    ? "Goal hit — today is on the books"
+    : "Goal open — hit every 10-minute item + the daily baseline";
+
+  const s = computeStreaks();
+  document.getElementById("streakN").textContent = s.cur;
+  document.getElementById("bestN").textContent = "Best · " + s.best;
+
+  renderHeat(); renderSpark();
+}
+
+function lastSquat(){
+  const dates = Object.keys(state.history).sort();
+  for(let i=dates.length-1;i>=0;i--){
+    if(dates[i] !== tKey && state.history[dates[i]].squat) return state.history[dates[i]].squat;
+  }
+  return null;
+}
+
+function renderHeat(){
+  const heat = document.getElementById("heat"); heat.innerHTML = "";
+  const days = 84;
+  const start = new Date(); start.setDate(start.getDate() - (days-1));
+  // pad to start on Sunday column
+  const pad = start.getDay();
+  for(let i=0;i<pad;i++){ const c=document.createElement("div"); c.className="c"; c.style.visibility="hidden"; heat.appendChild(c); }
+  for(let i=0;i<days;i++){
+    const d = new Date(start); d.setDate(start.getDate()+i);
+    const k = todayKey(d);
+    const c = document.createElement("div");
+    const status = isHit(k);
+    c.className = "c" + (status==="hit" ? " hit" : status==="part" ? " part" : "") + (k===tKey ? " today":"");
+    c.title = k;
+    heat.appendChild(c);
+  }
+}
+
+function renderSpark(){
+  const svg = document.getElementById("spark");
+  const pts = Object.keys(state.history).sort()
+    .filter(k=>state.history[k].squat)
+    .map(k=>({ d:k, v:state.history[k].squat }));
+  svg.innerHTML = "";
+  if(pts.length < 1){
+    document.getElementById("sparkNote").textContent = "Log your squat load on leg days. Bar + 2.5s each side = 50 lb.";
+    return;
+  }
+  const vals = pts.map(p=>p.v);
+  const min = Math.min(...vals) - 5, max = Math.max(...vals) + 5;
+  const W=600, H=90, padL=8, padR=8;
+  const x = i => pts.length===1 ? W/2 : padL + i*(W-padL-padR)/(pts.length-1);
+  const y = v => H-10 - (v-min)/(max-min || 1)*(H-24);
+  let path = "";
+  pts.forEach((p,i)=>{ path += (i===0?"M":"L") + x(i).toFixed(1) + " " + y(p.v).toFixed(1) + " "; });
+  svg.innerHTML =
+    '<path d="'+path+'" fill="none" stroke="var(--brass)" stroke-width="2.5"/>' +
+    pts.map((p,i)=>'<circle cx="'+x(i)+'" cy="'+y(p.v)+'" r="3.5" fill="var(--brass-hi)"/>').join("") +
+    '<text x="'+x(pts.length-1)+'" y="'+(y(pts[pts.length-1].v)-8)+'" fill="var(--chalk)" font-size="13" font-family="IBM Plex Mono" text-anchor="end">'+pts[pts.length-1].v+' lb</text>';
+  const first = pts[0].v, latest = pts[pts.length-1].v;
+  document.getElementById("sparkNote").textContent = "Started at "+first+" lb · now "+latest+" lb · +"+(latest-first)+" lb of pain-free progress";
+}
+
+render();
+
+// Pull current working weights when served from GitHub Pages (silently skipped when opened as a local file)
+fetch("data/progression.json").then(r=>r.ok ? r.json() : null).then(p=>{ if(p){ window.PROG = p; render(); } }).catch(()=>{});
+</script>
+</body>
+</html>
