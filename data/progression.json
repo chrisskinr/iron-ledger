@@ -1,0 +1,51 @@
+{
+  "weights": {
+    "c1": 175,
+    "c2": 50,
+    "s1": 50,
+    "b1": null,
+    "l1": 50
+  },
+  "lifts": {
+    "c1": {
+      "name": "Barbell bench press",
+      "alias": "bench",
+      "repTop": 8,
+      "repBottom": 6,
+      "increment": 5,
+      "unit": "lb"
+    },
+    "c2": {
+      "name": "DB incline press",
+      "alias": "incline",
+      "repTop": 10,
+      "repBottom": 8,
+      "increment": 5,
+      "unit": "lb/hand"
+    },
+    "s1": {
+      "name": "Seated DB OHP",
+      "alias": "ohp",
+      "repTop": 10,
+      "repBottom": 8,
+      "increment": 5,
+      "unit": "lb/hand"
+    },
+    "b1": {
+      "name": "One-arm DB row",
+      "alias": "row",
+      "repTop": 10,
+      "repBottom": 8,
+      "increment": 5,
+      "unit": "lb/hand"
+    },
+    "l1": {
+      "name": "Box squat (rehab)",
+      "alias": "squat",
+      "repTop": 8,
+      "repBottom": 6,
+      "increment": 2.5,
+      "unit": "lb"
+    }
+  }
+}
