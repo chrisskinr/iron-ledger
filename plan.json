@@ -1,0 +1,39 @@
+{
+  "anchorDate": "2026-08-07",
+  "timezone": "America/Chicago",
+  "baseline": [
+    { "id": "lymph", "name": "Lymph circuit v2 (~6 min)", "detail": "In order: 10 deep belly breaths → neck rolls + shrugs x5/way → arm circles x20/way → overhead reach-to-knee x15 → torso twists x30 → heel bounces 60s → clap-under knee lifts x20 → ankle pumps x20. Central first, limbs after" },
+    { "id": "vsits", "name": "100 V-sits", "detail": "Break into sets as needed — all 100 count" },
+    { "id": "knee", "name": "Knee care (3 min)", "detail": "Band terminal knee extensions x15/side + wall sit 2×30s — pain-free, every single day. Daily dosing is what rebuilds the knee" },
+    { "id": "plank", "name": "Plank 60s", "detail": "One minute total (2×30s fine) — balances the v-sits and braces your spine for heavy bench/rows/squats" },
+    { "id": "protein", "name": "Protein target", "detail": "~1g per lb of bodyweight today — the lifts only build what the protein pays for" }
+  ],
+  "rotation": [
+    {
+      "day": "Chest + Back",
+      "exercises": [
+        { "id": "c1", "tier": 1, "name": "Barbell bench press", "detail": "4×6–8, rack safeties set — superset with the rows" },
+        { "id": "b1", "tier": 1, "name": "One-arm DB row", "detail": "4×8–10/side, between bench sets" },
+        { "id": "c2", "tier": 2, "name": "DB incline press", "detail": "3×8–10" },
+        { "id": "b3", "tier": 2, "name": "Band lat pulldown", "detail": "3×12–15, band over top of rack — width without a pull-up bar" },
+        { "id": "c3", "tier": 3, "name": "DB flye", "detail": "3×12, slow negatives" },
+        { "id": "b4", "tier": 3, "name": "DB pullover", "detail": "3×10 across bench" },
+        { "id": "s4", "tier": 3, "name": "Band face pull", "detail": "3×15 — shoulder health insurance for all this pressing" }
+      ]
+    },
+    {
+      "day": "Legs + Shoulders",
+      "rehab": true,
+      "exercises": [
+        { "id": "l1", "tier": 1, "name": "Box squat (rehab load)", "detail": "4×8 pain-free only — superset with the presses" },
+        { "id": "s1", "tier": 1, "name": "Seated DB overhead press", "detail": "4×6–8 between squat sets — seated keeps you under the 7 ft ceiling" },
+        { "id": "l2", "tier": 2, "name": "Romanian deadlift", "detail": "3×8, hinge not squat — knee-friendly" },
+        { "id": "s2", "tier": 2, "name": "DB lateral raise", "detail": "3×12–15" },
+        { "id": "l3", "tier": 3, "name": "DB hip thrust", "detail": "3×10, shoulders on bench" },
+        { "id": "s3", "tier": 3, "name": "Rear-delt flye", "detail": "3×15, chest on incline bench" },
+        { "id": "l5", "tier": 3, "name": "Standing calf raise", "detail": "3×20" }
+      ]
+    }
+  ],
+  "tiers": { "1": "Shower in 10? Stop here", "2": "Got 25 minutes? Stop here", "3": "Full session" }
+}
