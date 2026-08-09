@@ -16,6 +16,7 @@ jobs:
           python-version: "3.12"
       - name: Append log entry
         env:
+          ENTRIES: ${{ toJSON(github.event.client_payload.entries) }}
           LIFT: ${{ github.event.client_payload.lift }}
           WEIGHT: ${{ github.event.client_payload.weight }}
           REPS: ${{ github.event.client_payload.reps }}
@@ -25,5 +26,5 @@ jobs:
           git config user.name "iron-ledger-bot"
           git config user.email "actions@github.com"
           git add data/log.json
-          git diff --cached --quiet || git commit -m "Rep log: ${{ github.event.client_payload.lift }} ${{ github.event.client_payload.weight }}x${{ github.event.client_payload.reps }}"
+          git diff --cached --quiet || git commit -m "Rep log"
           git push
