@@ -50,14 +50,17 @@
   .sec-title{font-family:'Big Shoulders Display',sans-serif; font-weight:700; font-size:20px; text-transform:uppercase; letter-spacing:.06em; color:var(--brass); margin-bottom:10px;}
 
   .card{background:var(--panel); border:1px solid rgba(201,162,75,.16); border-radius:6px; overflow:hidden;}
-  .ex{display:flex; align-items:center; gap:14px; padding:13px 14px; border-bottom:1px solid rgba(201,162,75,.1); cursor:pointer; user-select:none; transition:background .15s;}
+  .ex{display:flex; align-items:flex-start; gap:14px; padding:13px 14px; border-bottom:1px solid rgba(201,162,75,.1); cursor:pointer; user-select:none; transition:background .15s;}
   .ex:last-child{border-bottom:none;}
   .ex:hover{background:var(--panel2);}
-  .ex .box{width:24px; height:24px; min-width:24px; border:2px solid var(--brass); border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--iron); background:transparent; transition:background .15s;}
+  .ex .box{width:24px; height:24px; min-width:24px; border:2px solid var(--brass); border-radius:3px; display:flex; align-items:center; justify-content:center; font-size:15px; color:var(--iron); background:transparent; transition:background .15s; margin-top:1px;}
   .ex.checked .box{background:var(--brass);}
   .ex .nm{font-weight:600; font-size:15px;}
   .ex .dt{font-size:12.5px; color:var(--chalk-dim); margin-top:2px; line-height:1.35;}
   .ex.checked .nm, .ex.checked .dt{text-decoration:line-through; opacity:.55;}
+  .exctl{display:flex; gap:6px; align-items:center; margin-top:7px; font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); letter-spacing:.06em;}
+  .exctl input{width:64px; background:var(--iron); border:1px solid var(--brass-line); border-radius:4px; color:var(--brass-hi); font-family:'IBM Plex Mono',monospace; padding:6px 7px; font-size:14px;}
+  .ex.checked .exctl{text-decoration:none; opacity:1;}
 
   .cutline{display:flex; align-items:center; gap:10px; padding:8px 14px; background:var(--iron);}
   .cutline .rule{flex:1; border-top:1px dashed var(--brass);}
@@ -66,11 +69,9 @@
 
   .rehab-banner{display:flex; gap:10px; align-items:flex-start; background:rgba(208,139,44,.09); border:1px solid rgba(208,139,44,.4); border-radius:5px; padding:10px 12px; margin-bottom:10px; font-size:12.5px; color:var(--rehab); line-height:1.45;}
 
-  .squatlog{display:flex; align-items:center; gap:10px; padding:12px 14px; background:var(--panel2); border-top:1px solid var(--brass-line);}
-  .squatlog label{font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.12em; text-transform:uppercase; color:var(--chalk-dim);}
-  .squatlog input{width:80px; background:var(--iron); color:var(--brass-hi); border:1px solid var(--brass-line); border-radius:4px; padding:7px 9px; font-family:'IBM Plex Mono',monospace; font-size:15px;}
-  .squatlog button{background:var(--brass); color:var(--iron); border:none; border-radius:4px; padding:8px 14px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer;}
-  .squatlog .last{font-family:'IBM Plex Mono',monospace; font-size:11px; color:var(--chalk-dim); margin-left:auto;}
+  .sendrow{display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--panel2); border-top:1px solid var(--brass-line); flex-wrap:wrap;}
+  .sendrow button{background:var(--brass); color:var(--iron); border:none; border-radius:4px; padding:10px 18px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .sendrow .note{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); flex:1; min-width:160px; line-height:1.5;}
 
   .grid-wrap{background:var(--panel); border:1px solid rgba(201,162,75,.16); border-radius:6px; padding:14px;}
   .heat{display:grid; grid-template-rows:repeat(7,12px); grid-auto-flow:column; grid-auto-columns:12px; gap:3px;}
@@ -81,16 +82,12 @@
   .legend{display:flex; gap:14px; margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--chalk-dim); align-items:center;}
   .legend .sw{width:10px; height:10px; border-radius:2px; display:inline-block; margin-right:5px; vertical-align:-1px;}
 
-  .engrow{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
-  .engrow select, .engrow input{background:var(--iron); color:var(--chalk); border:1px solid var(--brass-line); border-radius:4px; padding:8px 9px; font-family:'IBM Plex Mono',monospace; font-size:13px;}
-  .engrow input[type=number]{width:86px; color:var(--brass-hi);}
-  .engrow select{max-width:170px;}
-  .engrow button{background:var(--brass); color:var(--iron); border:none; border-radius:4px; padding:9px 14px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer;}
-  .eng-note{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); margin-top:8px; line-height:1.5;}
-  .token-row{margin-top:10px; padding-top:10px; border-top:1px dashed var(--brass-line);}
-  .token-row input{flex:1; min-width:180px;}
   .spark{width:100%; height:90px; display:block;}
   .spark-note{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); margin-top:6px;}
+
+  .tokrow{display:flex; gap:8px; align-items:center; flex-wrap:wrap; margin-bottom:26px; background:var(--panel); border:1px solid rgba(201,162,75,.16); border-radius:6px; padding:12px 14px;}
+  .tokrow input{flex:1; min-width:180px; background:var(--iron); color:var(--chalk); border:1px solid var(--brass-line); border-radius:4px; padding:8px 9px; font-family:'IBM Plex Mono',monospace; font-size:13px;}
+  .tokrow button{background:var(--brass); color:var(--iron); border:none; border-radius:4px; padding:9px 14px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer;}
 
   .settings{display:flex; align-items:center; gap:10px; flex-wrap:wrap; font-size:12px; color:var(--chalk-dim); border-top:1px solid var(--brass-line); padding-top:14px;}
   .settings input[type=date]{background:var(--panel); color:var(--chalk); border:1px solid var(--brass-line); border-radius:4px; padding:6px 8px; font-family:'IBM Plex Mono',monospace; font-size:12px;}
@@ -106,7 +103,7 @@
 <body>
 <header>
   <div>
-    <div class="eyebrow">Skinner Enterprises · Basement Division</div>
+    <div class="eyebrow">Skinner Enterprises &#183; Basement Division</div>
     <h1>The <span>Iron</span> Ledger</h1>
   </div>
   <div class="datebox">
@@ -123,14 +120,14 @@
   <div class="streak">
     <div class="n" id="streakN">0</div>
     <div class="t">Day Streak</div>
-    <div class="best" id="bestN">Best · 0</div>
+    <div class="best" id="bestN">Best &#183; 0</div>
   </div>
 </div>
 
-<div class="status" id="statusBar"><span class="pip"></span><span id="statusTxt">Goal open — hit every 10-minute item + the daily baseline</span></div>
+<div class="status" id="statusBar"><span class="pip"></span><span id="statusTxt">Goal open &#8212; hit every 10-minute item + the daily baseline</span></div>
 
 <section>
-  <div class="sec-title">Daily Baseline — Non-negotiable</div>
+  <div class="sec-title">Daily Baseline &#8212; Non-negotiable</div>
   <div class="card" id="baselineList"></div>
 </section>
 
@@ -138,23 +135,6 @@
   <div class="sec-title" id="liftTitle">Lift</div>
   <div id="rehabSlot"></div>
   <div class="card" id="liftList"></div>
-</section>
-
-<section>
-  <div class="sec-title">Report To The Engine</div>
-  <div class="grid-wrap">
-    <div class="engrow">
-      <select id="engLift"></select>
-      <input type="number" id="engW" step="2.5" placeholder="weight">
-      <input type="number" id="engR" step="1" placeholder="worst reps">
-      <button id="engSend">Log</button>
-    </div>
-    <div class="eng-note" id="engNote">Feeds tomorrow's weights and advances the rotation. Log at least your Tier-1 lift every session — even a rough one.</div>
-    <div class="engrow token-row" id="tokRow">
-      <input type="password" id="engTok" placeholder="Paste GitHub token once (stored only on this device)">
-      <button id="engTokSave">Save</button>
-    </div>
-  </div>
 </section>
 
 <section>
@@ -170,153 +150,63 @@
 </section>
 
 <section>
-  <div class="sec-title">Squat Rehab — Load Over Time</div>
+  <div class="sec-title">Squat Rehab &#8212; Load Over Time</div>
   <div class="grid-wrap">
     <svg class="spark" id="spark" viewBox="0 0 600 90" preserveAspectRatio="none"></svg>
     <div class="spark-note" id="sparkNote">Log your squat load on leg days. Bar + 2.5s each side = 50 lb.</div>
   </div>
 </section>
 
+<div class="tokrow">
+  <input type="password" id="engTok" placeholder="Paste GitHub token once (stored only on this device)">
+  <button id="engTokSave">Save</button>
+</div>
+
 <div class="settings">
-  <label for="anchor">Rotation Day 1 (Chest) anchor date</label>
+  <label for="anchor">Fallback anchor date</label>
   <input type="date" id="anchor">
-  <span style="font-family:'IBM Plex Mono',monospace; font-size:10px;">Changing this re-maps which day is which — history is kept.</span>
+  <span style="font-family:'IBM Plex Mono',monospace; font-size:10px;">Only used if the engine's day pointer can't be reached.</span>
 </div>
 
 <script>
-const PLAN = {
+let PLAN = {
   "baseline": [
-    {
-      "id": "lymph",
-      "name": "Lymph circuit v2 (~6 min)",
-      "detail": "In order: 10 deep belly breaths → neck rolls + shrugs x5/way → arm circles x20/way → overhead reach-to-knee x15 → torso twists x30 → heel bounces 60s → clap-under knee lifts x20 → ankle pumps x20. Central first, limbs after"
-    },
-    {
-      "id": "vsits",
-      "name": "100 V-sits",
-      "detail": "Break into sets as needed — all 100 count"
-    },
-    {
-      "id": "knee",
-      "name": "Knee care (3 min)",
-      "detail": "Band terminal knee extensions x15/side + wall sit 2×30s — pain-free, every single day. Daily dosing is what rebuilds the knee"
-    },
-    {
-      "id": "plank",
-      "name": "Plank 60s",
-      "detail": "One minute total (2×30s fine) — balances the v-sits and braces your spine for heavy bench/rows/squats"
-    },
-    {
-      "id": "protein",
-      "name": "Protein target",
-      "detail": "~1g per lb of bodyweight today — the lifts only build what the protein pays for"
-    }
+    { "id": "lymph", "name": "Lymph circuit v2 (~6 min)", "detail": "In order: 10 deep belly breaths \u2192 neck rolls + shrugs x5/way \u2192 arm circles x20/way \u2192 overhead reach-to-knee x15 \u2192 torso twists x30 \u2192 heel bounces 60s \u2192 clap-under knee lifts x20 \u2192 ankle pumps x20. Central first, limbs after" },
+    { "id": "vsits", "name": "100 V-sits", "detail": "Break into sets as needed \u2014 all 100 count" },
+    { "id": "knee", "name": "Knee care (3 min)", "detail": "Band terminal knee extensions x15/side + wall sit 2\u00d730s \u2014 pain-free, every single day. Daily dosing is what rebuilds the knee" },
+    { "id": "plank", "name": "Plank 60s", "detail": "One minute total (2\u00d730s fine) \u2014 balances the v-sits and braces your spine for heavy bench/rows/squats" },
+    { "id": "protein", "name": "Protein target", "detail": "~1g per lb of bodyweight today \u2014 the lifts only build what the protein pays for" }
   ],
   "rotation": [
-    {
-      "day": "Chest + Back",
-      "exercises": [
-        {
-          "id": "c1",
-          "tier": 1,
-          "name": "Barbell bench press",
-          "detail": "4×6–8, rack safeties set — superset with the rows"
-        },
-        {
-          "id": "b1",
-          "tier": 1,
-          "name": "One-arm DB row",
-          "detail": "4×8–10/side, between bench sets"
-        },
-        {
-          "id": "c2",
-          "tier": 2,
-          "name": "DB incline press",
-          "detail": "3×8–10"
-        },
-        {
-          "id": "b3",
-          "tier": 2,
-          "name": "Band lat pulldown",
-          "detail": "3×12–15, band over top of rack — width without a pull-up bar"
-        },
-        {
-          "id": "c3",
-          "tier": 3,
-          "name": "DB flye",
-          "detail": "3×12, slow negatives"
-        },
-        {
-          "id": "b4",
-          "tier": 3,
-          "name": "DB pullover",
-          "detail": "3×10 across bench"
-        },
-        {
-          "id": "s4",
-          "tier": 3,
-          "name": "Band face pull",
-          "detail": "3×15 — shoulder health insurance for all this pressing"
-        }
-      ]
-    },
-    {
-      "day": "Legs + Shoulders",
-      "rehab": true,
-      "exercises": [
-        {
-          "id": "l1",
-          "tier": 1,
-          "name": "Box squat (rehab load)",
-          "detail": "4×8 pain-free only — superset with the presses"
-        },
-        {
-          "id": "s1",
-          "tier": 1,
-          "name": "Seated DB overhead press",
-          "detail": "4×6–8 between squat sets — seated keeps you under the 7 ft ceiling"
-        },
-        {
-          "id": "l2",
-          "tier": 2,
-          "name": "Romanian deadlift",
-          "detail": "3×8, hinge not squat — knee-friendly"
-        },
-        {
-          "id": "s2",
-          "tier": 2,
-          "name": "DB lateral raise",
-          "detail": "3×12–15"
-        },
-        {
-          "id": "l3",
-          "tier": 3,
-          "name": "DB hip thrust",
-          "detail": "3×10, shoulders on bench"
-        },
-        {
-          "id": "s3",
-          "tier": 3,
-          "name": "Rear-delt flye",
-          "detail": "3×15, chest on incline bench"
-        },
-        {
-          "id": "l5",
-          "tier": 3,
-          "name": "Standing calf raise",
-          "detail": "3×20"
-        }
-      ]
-    }
+    { "day": "Chest + Back", "exercises": [
+      { "id": "c1", "tier": 1, "name": "Barbell bench press", "detail": "4\u00d76\u20138, rack safeties set \u2014 superset with the rows" },
+      { "id": "b1", "tier": 1, "name": "One-arm DB row", "detail": "4\u00d78\u201310/side, between bench sets" },
+      { "id": "c2", "tier": 2, "name": "DB incline press", "detail": "3\u00d78\u201310" },
+      { "id": "b3", "tier": 2, "name": "Band lat pulldown", "detail": "3\u00d712\u201315, band over top of rack \u2014 width without a pull-up bar" },
+      { "id": "c3", "tier": 3, "name": "DB flye", "detail": "3\u00d712, slow negatives" },
+      { "id": "b4", "tier": 3, "name": "DB pullover", "detail": "3\u00d710 across bench" },
+      { "id": "s4", "tier": 3, "name": "Band face pull", "detail": "3\u00d715 \u2014 shoulder health insurance for all this pressing" }
+    ]},
+    { "day": "Legs + Shoulders", "rehab": true, "exercises": [
+      { "id": "l1", "tier": 1, "name": "Box squat (rehab load)", "detail": "4\u00d78 pain-free only \u2014 superset with the presses" },
+      { "id": "s1", "tier": 1, "name": "Seated DB overhead press", "detail": "4\u00d76\u20138 between squat sets \u2014 seated keeps you under the 7 ft ceiling" },
+      { "id": "l2", "tier": 2, "name": "Romanian deadlift", "detail": "3\u00d78, hinge not squat \u2014 knee-friendly" },
+      { "id": "s2", "tier": 2, "name": "DB lateral raise", "detail": "3\u00d712\u201315" },
+      { "id": "l3", "tier": 3, "name": "DB hip thrust", "detail": "3\u00d710, shoulders on bench" },
+      { "id": "s3", "tier": 3, "name": "Rear-delt flye", "detail": "3\u00d715, chest on incline bench" },
+      { "id": "l5", "tier": 3, "name": "Standing calf raise", "detail": "3\u00d720" }
+    ]}
   ],
-  "tiers": {
-    "1": "Shower in 10? Stop here",
-    "2": "Got 25 minutes? Stop here",
-    "3": "Full session"
-  }
+  "tiers": { "1": "Shower in 10? Stop here", "2": "Got 25 minutes? Stop here", "3": "Full session" }
 };
 
 const KEY = "ironLedger.v1";
+const TOKKEY = "ironLedger.token";
+const REPO_DISPATCH = "https://api.github.com/repos/chrisskinr/iron-ledger/dispatches";
+const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1 };
+const REPTOP = { c1:8, c2:10, s1:8, b1:10, l1:8 };
+const UNITS = { c1:"lb", c2:"lb/hand", s1:"lb/hand", b1:"lb/hand", l1:"lb" };
+
 function todayKey(d){ const x = d || new Date(); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); }
 function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
 function save(s){ localStorage.setItem(KEY, JSON.stringify(s)); }
@@ -332,41 +222,34 @@ function dayIndexFor(dateStr){
   const diff = Math.round((d - a) / 86400000);
   const L = PLAN.rotation.length; return ((diff % L) + L) % L;
 }
-
 function dayRecord(dateStr){
   if(!state.history[dateStr]) state.history[dateStr] = { checks:{} };
   return state.history[dateStr];
 }
-
 function isHit(dateStr){
-  const rec = state.history[dateStr];
-  if(!rec) return "miss";
+  const r = state.history[dateStr];
+  if(!r) return "miss";
   const idx = dayIndexFor(dateStr);
   const t1 = PLAN.rotation[idx].exercises.filter(e=>e.tier===1);
-  const t1done = t1.every(e=>rec.checks[e.id]);
-  const baseDone = PLAN.baseline.every(b=>rec.checks[b.id]);
+  const t1done = t1.every(e=>r.checks[e.id]);
+  const baseDone = PLAN.baseline.every(b=>r.checks[b.id]);
   if(t1done && baseDone) return "hit";
-  const any = Object.values(rec.checks).some(v=>v);
+  const any = Object.values(r.checks).some(v=>v);
   return any ? "part" : "miss";
 }
-
 function computeStreaks(){
   let cur = 0;
-  const t = todayKey();
-  // current streak: today counts if hit; otherwise start from yesterday
   let d = new Date();
-  if(isHit(t) !== "hit") d.setDate(d.getDate()-1);
+  if(isHit(todayKey()) !== "hit") d.setDate(d.getDate()-1);
   while(isHit(todayKey(d)) === "hit"){ cur++; d.setDate(d.getDate()-1); }
-  // best streak across history
   const dates = Object.keys(state.history).sort();
   let best = cur;
   if(dates.length){
-    let run = 0, prev = null;
+    let run = 0;
     let cursor = new Date(dates[0] + "T12:00:00");
     const end = new Date();
     while(cursor <= end){
-      const k = todayKey(cursor);
-      if(isHit(k) === "hit"){ run++; if(run > best) best = run; } else { run = 0; }
+      if(isHit(todayKey(cursor)) === "hit"){ run++; if(run > best) best = run; } else { run = 0; }
       cursor.setDate(cursor.getDate()+1);
     }
   }
@@ -383,10 +266,20 @@ document.getElementById("dateStr").textContent = new Date().toLocaleDateString("
 document.getElementById("anchor").value = state.anchorDate;
 document.getElementById("anchor").addEventListener("change", e=>{ state.anchorDate = e.target.value; save(state); location.reload(); });
 
+let engVals = {};
+function getEV(id){
+  if(!engVals[id]){
+    const w = (window.PROG && window.PROG.weights) ? window.PROG.weights[id] : null;
+    const rt = (window.PROG && window.PROG.lifts && window.PROG.lifts[id]) ? window.PROG.lifts[id].repTop : REPTOP[id];
+    engVals[id] = { w: (w != null ? w : ""), r: rt, touched: false };
+  }
+  return engVals[id];
+}
+
 function applyDay(){
   todayPlan = PLAN.rotation[tIdx];
   document.getElementById("dayName").textContent = todayPlan.day + " Day";
-  document.getElementById("liftTitle").textContent = todayPlan.day + " — by priority";
+  document.getElementById("liftTitle").textContent = todayPlan.day + " \u2014 by priority";
   const rot = document.getElementById("rotdots"); rot.innerHTML = "";
   PLAN.rotation.forEach((r,i)=>{
     const dot = document.createElement("div");
@@ -397,76 +290,31 @@ function applyDay(){
   rl.textContent = "DAY " + (tIdx+1) + " OF " + PLAN.rotation.length;
   rot.appendChild(rl);
   document.getElementById("rehabSlot").innerHTML = todayPlan.rehab
-    ? '<div class="rehab-banner">⚠ Knee rehab rules: pain-free reps only. If anything sharp shows up, rack it and do the band + hip work instead — the day still counts.</div>'
+    ? '<div class="rehab-banner">\u26a0 Knee rehab rules: pain-free reps only. If anything sharp shows up, rack it and do the band + hip work instead \u2014 the day still counts.</div>'
     : "";
-  const sel = document.getElementById("engLift"); sel.innerHTML = "";
-  todayPlan.exercises.filter(e=>TRACKED[e.id]).forEach(e=>{
-    const o = document.createElement("option"); o.value = e.id; o.textContent = e.name;
-    sel.appendChild(o);
-  });
-  prefillEngineWeight();
 }
-
-const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1 };
-const REPO_DISPATCH = "https://api.github.com/repos/chrisskinr/iron-ledger/dispatches";
-const TOKKEY = "ironLedger.token";
-
-function prefillEngineWeight(){
-  const id = document.getElementById("engLift").value;
-  const w = window.PROG && window.PROG.weights ? window.PROG.weights[id] : null;
-  document.getElementById("engW").value = (w != null) ? w : "";
-}
-
-function refreshTokenRow(){
-  const has = !!localStorage.getItem(TOKKEY);
-  document.getElementById("engTok").placeholder = has ? "Token saved ✓ — paste a new one to replace" : "Paste GitHub token once (stored only on this device)";
-}
-
-document.getElementById("engLift").addEventListener("change", prefillEngineWeight);
-document.getElementById("engTokSave").addEventListener("click", ()=>{
-  const v = document.getElementById("engTok").value.trim();
-  if(v){ localStorage.setItem(TOKKEY, v); document.getElementById("engTok").value = ""; }
-  refreshTokenRow();
-});
-document.getElementById("engSend").addEventListener("click", async ()=>{
-  const note = document.getElementById("engNote");
-  const tok = localStorage.getItem(TOKKEY);
-  if(!tok){ note.textContent = "No token saved yet — paste your GitHub token below first (one time)."; return; }
-  const id = document.getElementById("engLift").value;
-  const w = parseFloat(document.getElementById("engW").value);
-  const r = parseFloat(document.getElementById("engR").value);
-  if(isNaN(w)){ note.textContent = "Enter the weight you used."; return; }
-  note.textContent = "Sending…";
-  try{
-    const resp = await fetch(REPO_DISPATCH, {
-      method: "POST",
-      headers: { "Authorization": "Bearer " + tok, "Accept": "application/vnd.github+json", "Content-Type": "application/json" },
-      body: JSON.stringify({ event_type: "log", client_payload: { lift: id, weight: w, reps: isNaN(r) ? "" : r } })
-    });
-    if(resp.status === 204){
-      note.textContent = "Logged ✓ — tomorrow's brief will carry the update.";
-      rec.checks[id] = true; save(state); render();
-      if(id === "l1" && todayPlan.rehab){ rec.squat = w; save(state); render(); }
-    } else if(resp.status === 401 || resp.status === 403){
-      note.textContent = "Token rejected (" + resp.status + ") — check its scope (this repo, Contents: read/write) or paste a fresh one below.";
-    } else {
-      note.textContent = "GitHub said " + resp.status + " — try again in a moment.";
-    }
-  }catch(err){ note.textContent = "Network error — try again."; }
-});
-refreshTokenRow();
-applyDay();
 
 function exRow(e){
   const div = document.createElement("div");
   div.className = "ex" + (rec.checks[e.id] ? " checked":"");
-  const w = window.PROG && window.PROG.weights && window.PROG.weights[e.id];
-  const unit = w != null && window.PROG.lifts && window.PROG.lifts[e.id] ? window.PROG.lifts[e.id].unit : "lb";
-  const wtag = (w != null) ? '<span style="color:var(--brass-hi); font-family:\'IBM Plex Mono\',monospace;">'+ (Number.isInteger(w)? w : w) +' '+unit+' · </span>' : '';
-  div.innerHTML = '<div class="box">✓</div><div><div class="nm">'+e.name+'</div><div class="dt">'+wtag+e.detail+'</div></div>';
-  div.addEventListener("click", ()=>{
+  let inner = '<div class="box">\u2713</div><div style="flex:1"><div class="nm">'+e.name+'</div><div class="dt">'+e.detail+'</div>';
+  if(TRACKED[e.id]){
+    const ev = getEV(e.id);
+    inner += '<div class="exctl"><input type="number" step="2.5" data-id="'+e.id+'" data-k="w" value="'+ev.w+'" placeholder="lb"> '+(UNITS[e.id]||"lb")+' \u00d7 <input type="number" step="1" data-id="'+e.id+'" data-k="r" value="'+ev.r+'"> worst reps</div>';
+  }
+  inner += '</div>';
+  div.innerHTML = inner;
+  div.addEventListener("click", (ev)=>{
+    if(ev.target.tagName === "INPUT") return;
     rec.checks[e.id] = !rec.checks[e.id];
     save(state); render();
+  });
+  div.querySelectorAll("input").forEach(inp=>{
+    inp.addEventListener("input", ()=>{
+      const v = getEV(inp.dataset.id);
+      v[inp.dataset.k] = inp.value;
+      v.touched = true;
+    });
   });
   return div;
 }
@@ -474,8 +322,41 @@ function exRow(e){
 function cutline(txt){
   const d = document.createElement("div");
   d.className = "cutline";
-  d.innerHTML = '<span class="scis">✂</span><span class="txt">'+txt+'</span><span class="rule"></span>';
+  d.innerHTML = '<span class="scis">\u2702</span><span class="txt">'+txt+'</span><span class="rule"></span>';
   return d;
+}
+
+async function sendSession(noteEl){
+  const tok = localStorage.getItem(TOKKEY);
+  if(!tok){ noteEl.textContent = "No token saved \u2014 paste your GitHub token at the bottom of the page first (one time)."; return; }
+  const picked = todayPlan.exercises.filter(e=>TRACKED[e.id] && rec.checks[e.id]);
+  if(!picked.length){ noteEl.textContent = "Check off the lifts you did first \u2014 then Log Session sends them all."; return; }
+  const entries = [];
+  for(const e of picked){
+    const ev = getEV(e.id);
+    const w = parseFloat(ev.w);
+    if(isNaN(w)){ noteEl.textContent = "Enter a weight for " + e.name + "."; return; }
+    const r = parseFloat(ev.r);
+    entries.push({ lift: e.id, weight: w, reps: isNaN(r) ? "" : r });
+  }
+  noteEl.textContent = "Sending " + entries.length + " lift" + (entries.length>1?"s":"") + "\u2026";
+  try{
+    const resp = await fetch(REPO_DISPATCH, {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + tok, "Accept": "application/vnd.github+json", "Content-Type": "application/json" },
+      body: JSON.stringify({ event_type: "log", client_payload: { entries: entries } })
+    });
+    if(resp.status === 204){
+      const sq = entries.find(x=>x.lift==="l1");
+      if(sq){ rec.squat = sq.weight; }
+      save(state); render();
+      document.getElementById("engNote").textContent = "Logged " + entries.length + " \u2713 \u2014 tomorrow's brief will carry the update.";
+    } else if(resp.status === 401 || resp.status === 403){
+      noteEl.textContent = "Token rejected (" + resp.status + ") \u2014 re-check its scope or paste a fresh one below.";
+    } else {
+      noteEl.textContent = "GitHub said " + resp.status + " \u2014 try again in a moment.";
+    }
+  }catch(err){ noteEl.textContent = "Network error \u2014 try again."; }
 }
 
 function render(){
@@ -490,45 +371,41 @@ function render(){
     if(tier < 3) lift.appendChild(cutline(PLAN.tiers[tier]));
   });
 
-  if(todayPlan.rehab){
-    const sq = document.createElement("div");
-    sq.className = "squatlog";
-    const last = lastSquat();
-    sq.innerHTML = '<label>Squat load</label><input type="number" id="sqIn" step="2.5" placeholder="lb" value="'+(rec.squat||"")+'"><button id="sqBtn">Log</button><span class="last">'+(last ? "Last: "+last+" lb" : "First log")+'</span>';
-    lift.appendChild(sq);
-    sq.querySelector("#sqBtn").addEventListener("click", ()=>{
-      const v = parseFloat(sq.querySelector("#sqIn").value);
-      if(!isNaN(v)){ rec.squat = v; save(state); render(); }
-    });
-  }
+  const sr = document.createElement("div");
+  sr.className = "sendrow";
+  sr.innerHTML = '<button id="engSend">Log Session</button><span class="note" id="engNote">One tap \u2192 every checked lift (with its weight + worst reps) goes to the engine.</span>';
+  lift.appendChild(sr);
+  sr.querySelector("#engSend").addEventListener("click", ()=>sendSession(document.getElementById("engNote")));
 
   const st = isHit(tKey);
   const bar = document.getElementById("statusBar");
   bar.className = "status" + (st==="hit" ? " hit":"");
   document.getElementById("statusTxt").textContent = st==="hit"
-    ? "Goal hit — today is on the books"
-    : "Goal open — hit every 10-minute item + the daily baseline";
+    ? "Goal hit \u2014 today is on the books"
+    : "Goal open \u2014 hit every 10-minute item + the daily baseline";
 
   const s = computeStreaks();
   document.getElementById("streakN").textContent = s.cur;
-  document.getElementById("bestN").textContent = "Best · " + s.best;
+  document.getElementById("bestN").textContent = "Best \u00b7 " + s.best;
 
   renderHeat(); renderSpark();
 }
 
-function lastSquat(){
-  const dates = Object.keys(state.history).sort();
-  for(let i=dates.length-1;i>=0;i--){
-    if(dates[i] !== tKey && state.history[dates[i]].squat) return state.history[dates[i]].squat;
-  }
-  return null;
+document.getElementById("engTokSave").addEventListener("click", ()=>{
+  const v = document.getElementById("engTok").value.trim();
+  if(v){ localStorage.setItem(TOKKEY, v); document.getElementById("engTok").value = ""; }
+  refreshTokenRow();
+});
+function refreshTokenRow(){
+  const has = !!localStorage.getItem(TOKKEY);
+  document.getElementById("engTok").placeholder = has ? "Token saved \u2713 \u2014 paste a new one to replace" : "Paste GitHub token once (stored only on this device)";
 }
+refreshTokenRow();
 
 function renderHeat(){
   const heat = document.getElementById("heat"); heat.innerHTML = "";
   const days = 84;
   const start = new Date(); start.setDate(start.getDate() - (days-1));
-  // pad to start on Sunday column
   const pad = start.getDay();
   for(let i=0;i<pad;i++){ const c=document.createElement("div"); c.className="c"; c.style.visibility="hidden"; heat.appendChild(c); }
   for(let i=0;i<days;i++){
@@ -564,13 +441,27 @@ function renderSpark(){
     pts.map((p,i)=>'<circle cx="'+x(i)+'" cy="'+y(p.v)+'" r="3.5" fill="var(--brass-hi)"/>').join("") +
     '<text x="'+x(pts.length-1)+'" y="'+(y(pts[pts.length-1].v)-8)+'" fill="var(--chalk)" font-size="13" font-family="IBM Plex Mono" text-anchor="end">'+pts[pts.length-1].v+' lb</text>';
   const first = pts[0].v, latest = pts[pts.length-1].v;
-  document.getElementById("sparkNote").textContent = "Started at "+first+" lb · now "+latest+" lb · +"+(latest-first)+" lb of pain-free progress";
+  document.getElementById("sparkNote").textContent = "Started at "+first+" lb \u00b7 now "+latest+" lb \u00b7 +"+(latest-first)+" lb of pain-free progress";
 }
 
+applyDay();
 render();
 
-// Pull current working weights when served from GitHub Pages (silently skipped when opened as a local file)
-fetch("data/progression.json").then(r=>r.ok ? r.json() : null).then(p=>{ if(p){ window.PROG = p; if(Number.isInteger(p.currentDayIndex)){ tIdx = p.currentDayIndex % PLAN.rotation.length; applyDay(); } prefillEngineWeight(); render(); } }).catch(()=>{});
+// Live config: plan.json is the single source of truth; progression carries weights + day pointer.
+Promise.all([
+  fetch("plan.json").then(r=>r.ok ? r.json() : null).catch(()=>null),
+  fetch("data/progression.json").then(r=>r.ok ? r.json() : null).catch(()=>null)
+]).then(([pl, p])=>{
+  if(pl && pl.rotation){ PLAN = pl; }
+  if(p){
+    window.PROG = p;
+    if(Number.isInteger(p.currentDayIndex)) tIdx = p.currentDayIndex % PLAN.rotation.length;
+  }
+  tIdx = tIdx % PLAN.rotation.length;
+  Object.keys(engVals).forEach(id=>{ if(!engVals[id].touched) delete engVals[id]; });
+  applyDay();
+  render();
+});
 </script>
 </body>
 </html>
