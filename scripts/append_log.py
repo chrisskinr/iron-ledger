@@ -11,7 +11,7 @@ ALIASES = {"bench": "c1", "incline": "c2", "ohp": "s1", "row": "b1", "squat": "l
 lift_id = ALIASES.get(lift, lift)  # accept either alias or raw id
 
 entry = {
-    "date": datetime.datetime.now(ZoneInfo("America/Chicago")).date().isoformat(),
+    "date": os.environ.get("DATE_OVERRIDE") or datetime.datetime.now(ZoneInfo("America/Chicago")).date().isoformat(),
     "lift": lift_id,
     "weight": float(weight) if weight else None,
     "worstSetReps": int(float(reps)) if reps else None,
