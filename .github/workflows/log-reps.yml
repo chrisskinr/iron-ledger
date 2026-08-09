@@ -20,12 +20,10 @@ jobs:
           WEIGHT: ${{ github.event.client_payload.weight }}
           REPS: ${{ github.event.client_payload.reps }}
         run: python scripts/append_log.py
-      - name: Recompute progression + rebuild brief
-        run: python scripts/build_today.py
       - name: Commit
         run: |
           git config user.name "iron-ledger-bot"
           git config user.email "actions@github.com"
-          git add data/ today.txt
+          git add data/log.json
           git diff --cached --quiet || git commit -m "Rep log: ${{ github.event.client_payload.lift }} ${{ github.event.client_payload.weight }}x${{ github.event.client_payload.reps }}"
           git push
