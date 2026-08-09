@@ -26,8 +26,8 @@
     "s1": {
       "name": "Seated DB OHP",
       "alias": "ohp",
-      "repTop": 10,
-      "repBottom": 8,
+      "repTop": 8,
+      "repBottom": 6,
       "increment": 5,
       "unit": "lb/hand"
     },
@@ -47,5 +47,7 @@
       "increment": 2.5,
       "unit": "lb"
     }
-  }
+  },
+  "currentDayIndex": 0,
+  "lastAdvanceLogDate": null
 }
