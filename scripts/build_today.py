@@ -52,9 +52,19 @@ with open(log_path, "w") as f:
 # ---- build today.txt ----
 tz = ZoneInfo(plan.get("timezone", "America/Chicago"))
 today = datetime.date.fromisoformat(os.environ["DATE_OVERRIDE"]) if os.environ.get("DATE_OVERRIDE") else datetime.datetime.now(tz).date()
-anchor = datetime.date.fromisoformat(plan["anchorDate"])
-idx = (today - anchor).days % len(plan["rotation"])
+
+# ---- log-driven rotation: the day advances only after a logged session ----
+if "currentDayIndex" not in prog:
+    prog["currentDayIndex"] = 0
+latest_log_date = max((e["date"] for e in log), default=None)
+if latest_log_date and latest_log_date != prog.get("lastAdvanceLogDate"):
+    prog["currentDayIndex"] = (prog["currentDayIndex"] + 1) % len(plan["rotation"])
+    prog["lastAdvanceLogDate"] = latest_log_date
+idx = prog["currentDayIndex"]
 day = plan["rotation"][idx]
+
+with open("data/progression.json", "w") as f:
+    json.dump(prog, f, indent=2)
 
 def w_of(ex_id):
     w = prog["weights"].get(ex_id)
