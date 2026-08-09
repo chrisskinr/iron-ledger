@@ -81,6 +81,14 @@
   .legend{display:flex; gap:14px; margin-top:10px; font-family:'IBM Plex Mono',monospace; font-size:10px; color:var(--chalk-dim); align-items:center;}
   .legend .sw{width:10px; height:10px; border-radius:2px; display:inline-block; margin-right:5px; vertical-align:-1px;}
 
+  .engrow{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+  .engrow select, .engrow input{background:var(--iron); color:var(--chalk); border:1px solid var(--brass-line); border-radius:4px; padding:8px 9px; font-family:'IBM Plex Mono',monospace; font-size:13px;}
+  .engrow input[type=number]{width:86px; color:var(--brass-hi);}
+  .engrow select{max-width:170px;}
+  .engrow button{background:var(--brass); color:var(--iron); border:none; border-radius:4px; padding:9px 14px; font-family:'IBM Plex Mono',monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer;}
+  .eng-note{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); margin-top:8px; line-height:1.5;}
+  .token-row{margin-top:10px; padding-top:10px; border-top:1px dashed var(--brass-line);}
+  .token-row input{flex:1; min-width:180px;}
   .spark{width:100%; height:90px; display:block;}
   .spark-note{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); margin-top:6px;}
 
@@ -130,6 +138,23 @@
   <div class="sec-title" id="liftTitle">Lift</div>
   <div id="rehabSlot"></div>
   <div class="card" id="liftList"></div>
+</section>
+
+<section>
+  <div class="sec-title">Report To The Engine</div>
+  <div class="grid-wrap">
+    <div class="engrow">
+      <select id="engLift"></select>
+      <input type="number" id="engW" step="2.5" placeholder="weight">
+      <input type="number" id="engR" step="1" placeholder="worst reps">
+      <button id="engSend">Log</button>
+    </div>
+    <div class="eng-note" id="engNote">Feeds tomorrow's weights and advances the rotation. Log at least your Tier-1 lift every session — even a rough one.</div>
+    <div class="engrow token-row" id="tokRow">
+      <input type="password" id="engTok" placeholder="Paste GitHub token once (stored only on this device)">
+      <button id="engTokSave">Save</button>
+    </div>
+  </div>
 </section>
 
 <section>
@@ -374,7 +399,62 @@ function applyDay(){
   document.getElementById("rehabSlot").innerHTML = todayPlan.rehab
     ? '<div class="rehab-banner">⚠ Knee rehab rules: pain-free reps only. If anything sharp shows up, rack it and do the band + hip work instead — the day still counts.</div>'
     : "";
+  const sel = document.getElementById("engLift"); sel.innerHTML = "";
+  todayPlan.exercises.filter(e=>TRACKED[e.id]).forEach(e=>{
+    const o = document.createElement("option"); o.value = e.id; o.textContent = e.name;
+    sel.appendChild(o);
+  });
+  prefillEngineWeight();
 }
+
+const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1 };
+const REPO_DISPATCH = "https://api.github.com/repos/chrisskinr/iron-ledger/dispatches";
+const TOKKEY = "ironLedger.token";
+
+function prefillEngineWeight(){
+  const id = document.getElementById("engLift").value;
+  const w = window.PROG && window.PROG.weights ? window.PROG.weights[id] : null;
+  document.getElementById("engW").value = (w != null) ? w : "";
+}
+
+function refreshTokenRow(){
+  const has = !!localStorage.getItem(TOKKEY);
+  document.getElementById("engTok").placeholder = has ? "Token saved ✓ — paste a new one to replace" : "Paste GitHub token once (stored only on this device)";
+}
+
+document.getElementById("engLift").addEventListener("change", prefillEngineWeight);
+document.getElementById("engTokSave").addEventListener("click", ()=>{
+  const v = document.getElementById("engTok").value.trim();
+  if(v){ localStorage.setItem(TOKKEY, v); document.getElementById("engTok").value = ""; }
+  refreshTokenRow();
+});
+document.getElementById("engSend").addEventListener("click", async ()=>{
+  const note = document.getElementById("engNote");
+  const tok = localStorage.getItem(TOKKEY);
+  if(!tok){ note.textContent = "No token saved yet — paste your GitHub token below first (one time)."; return; }
+  const id = document.getElementById("engLift").value;
+  const w = parseFloat(document.getElementById("engW").value);
+  const r = parseFloat(document.getElementById("engR").value);
+  if(isNaN(w)){ note.textContent = "Enter the weight you used."; return; }
+  note.textContent = "Sending…";
+  try{
+    const resp = await fetch(REPO_DISPATCH, {
+      method: "POST",
+      headers: { "Authorization": "Bearer " + tok, "Accept": "application/vnd.github+json", "Content-Type": "application/json" },
+      body: JSON.stringify({ event_type: "log", client_payload: { lift: id, weight: w, reps: isNaN(r) ? "" : r } })
+    });
+    if(resp.status === 204){
+      note.textContent = "Logged ✓ — tomorrow's brief will carry the update.";
+      rec.checks[id] = true; save(state); render();
+      if(id === "l1" && todayPlan.rehab){ rec.squat = w; save(state); render(); }
+    } else if(resp.status === 401 || resp.status === 403){
+      note.textContent = "Token rejected (" + resp.status + ") — check its scope (this repo, Contents: read/write) or paste a fresh one below.";
+    } else {
+      note.textContent = "GitHub said " + resp.status + " — try again in a moment.";
+    }
+  }catch(err){ note.textContent = "Network error — try again."; }
+});
+refreshTokenRow();
 applyDay();
 
 function exRow(e){
@@ -490,7 +570,7 @@ function renderSpark(){
 render();
 
 // Pull current working weights when served from GitHub Pages (silently skipped when opened as a local file)
-fetch("data/progression.json").then(r=>r.ok ? r.json() : null).then(p=>{ if(p){ window.PROG = p; if(Number.isInteger(p.currentDayIndex)){ tIdx = p.currentDayIndex % PLAN.rotation.length; applyDay(); } render(); } }).catch(()=>{});
+fetch("data/progression.json").then(r=>r.ok ? r.json() : null).then(p=>{ if(p){ window.PROG = p; if(Number.isInteger(p.currentDayIndex)){ tIdx = p.currentDayIndex % PLAN.rotation.length; applyDay(); } prefillEngineWeight(); render(); } }).catch(()=>{});
 </script>
 </body>
 </html>
