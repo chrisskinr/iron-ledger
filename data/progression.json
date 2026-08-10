@@ -1,9 +1,9 @@
 {
   "weights": {
-    "c1": 175,
-    "c2": 50,
+    "c1": 140.0,
+    "c2": 45.0,
     "s1": 50,
-    "b1": null,
+    "b1": 35.0,
     "l1": 50
   },
   "lifts": {
@@ -48,6 +48,6 @@
       "unit": "lb"
     }
   },
-  "currentDayIndex": 0,
-  "lastAdvanceLogDate": null
+  "currentDayIndex": 1,
+  "lastAdvanceLogDate": "2026-08-09"
 }
