@@ -19,5 +19,19 @@
     "weight": 40.0,
     "worstSetReps": 10,
     "processed": true
+  },
+  {
+    "date": "2026-08-10",
+    "lift": "l1",
+    "weight": 55.0,
+    "worstSetReps": 8,
+    "processed": false
+  },
+  {
+    "date": "2026-08-10",
+    "lift": "s1",
+    "weight": 40.0,
+    "worstSetReps": 8,
+    "processed": false
   }
 ]
