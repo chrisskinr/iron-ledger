@@ -60,8 +60,11 @@ latest_log_date = max((e["date"] for e in log), default=None)
 if latest_log_date and latest_log_date != prog.get("lastAdvanceLogDate"):
     prog["currentDayIndex"] = (prog["currentDayIndex"] + 1) % len(plan["rotation"])
     prog["lastAdvanceLogDate"] = latest_log_date
-idx = prog["currentDayIndex"]
-day = plan["rotation"][idx]
+travel = plan.get("travel")
+in_travel = bool(travel) and today <= datetime.date.fromisoformat(travel["until"])
+rotation = travel["rotation"] if in_travel else plan["rotation"]
+idx = prog["currentDayIndex"] % len(rotation)
+day = rotation[idx]
 
 with open("data/progression.json", "w") as f:
     json.dump(prog, f, indent=2)
@@ -75,8 +78,12 @@ def w_of(ex_id):
     return f"{wtxt} {unit} · "
 
 tier_labels = {1: "IF YOU ONLY HAVE 10 MIN", 2: "GOT 25 MIN — ADD", 3: "FULL SESSION — ADD"}
+if in_travel:
+    tier_labels = {int(k): v for k, v in travel.get("tierLabels", {}).items()} or tier_labels
 
-lines = [f"🏋️ {day['day'].upper()} DAY — {today.strftime('%a %b %-d')}"]
+emoji = "🏨" if in_travel else "🏋️"
+mode = " · HOTEL MODE" if in_travel else ""
+lines = [f"{emoji} {day['day'].upper()} DAY{mode} — {today.strftime('%a %b %-d')}"]
 if day.get("rehab"):
     lines.append("⚠️ Knee: pain-free reps only. Sharp pain = rack it.")
 lines.append("")
