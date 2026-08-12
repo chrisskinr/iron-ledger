@@ -203,9 +203,9 @@ let PLAN = {
 const KEY = "ironLedger.v1";
 const TOKKEY = "ironLedger.token";
 const REPO_DISPATCH = "https://api.github.com/repos/chrisskinr/iron-ledger/dispatches";
-const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1 };
-const REPTOP = { c1:8, c2:10, s1:8, b1:10, l1:8 };
-const UNITS = { c1:"lb", c2:"lb/hand", s1:"lb/hand", b1:"lb/hand", l1:"lb" };
+const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1, c3:1, b3:1, b4:1, s4:1, l2:1, s2:1, l3:1, s3:1, l5:1 };
+const REPTOP = { c1:8, c2:10, s1:8, b1:10, l1:8, c3:12, b3:15, b4:10, s4:15, l2:8, s2:15, l3:10, s3:15, l5:20 };
+const UNITS = { c1:"lb", c2:"lb/hand", s1:"lb/hand", b1:"lb/hand", l1:"lb", c3:"lb/hand", b3:"band lb", b4:"lb", s4:"band lb", l2:"lb", s2:"lb/hand", l3:"lb", s3:"lb/hand", l5:"lb" };
 
 function todayKey(d){ const x = d || new Date(); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); }
 function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
@@ -227,6 +227,13 @@ function dayRecord(dateStr){
   return state.history[dateStr];
 }
 function isHit(dateStr){
+  // Server-truth streak: logged sessions (from data/log.json) count on every device.
+  if(window.LOGDATES){
+    if(window.LOGDATES.has(dateStr)) return "hit";
+    const r0 = state.history[dateStr];
+    return (r0 && Object.values(r0.checks).some(v=>v)) ? "part" : "miss";
+  }
+  // Fallback (no network): local checkbox logic
   const r = state.history[dateStr];
   if(!r) return "miss";
   const idx = dayIndexFor(dateStr);
@@ -243,6 +250,7 @@ function computeStreaks(){
   if(isHit(todayKey()) !== "hit") d.setDate(d.getDate()-1);
   while(isHit(todayKey(d)) === "hit"){ cur++; d.setDate(d.getDate()-1); }
   const dates = Object.keys(state.history).sort();
+  if(window.LOGDATES && window.LOGDATES.size){ const ld = [...window.LOGDATES].sort(); if(!dates.length || ld[0] < dates[0]) dates.unshift(ld[0]); }
   let best = cur;
   if(dates.length){
     let run = 0;
@@ -347,6 +355,8 @@ async function sendSession(noteEl){
       body: JSON.stringify({ event_type: "log", client_payload: { entries: entries } })
     });
     if(resp.status === 204){
+      if(!window.LOGDATES) window.LOGDATES = new Set();
+      window.LOGDATES.add(tKey);
       const sq = entries.find(x=>x.lift==="l1");
       if(sq){ rec.squat = sq.weight; }
       save(state); render();
@@ -382,7 +392,7 @@ function render(){
   bar.className = "status" + (st==="hit" ? " hit":"");
   document.getElementById("statusTxt").textContent = st==="hit"
     ? "Goal hit \u2014 today is on the books"
-    : "Goal open \u2014 hit every 10-minute item + the daily baseline";
+    : "Goal open \u2014 log your session to put today on the books";
 
   const s = computeStreaks();
   document.getElementById("streakN").textContent = s.cur;
@@ -450,8 +460,10 @@ render();
 // Live config: plan.json is the single source of truth; progression carries weights + day pointer.
 Promise.all([
   fetch("plan.json").then(r=>r.ok ? r.json() : null).catch(()=>null),
-  fetch("data/progression.json").then(r=>r.ok ? r.json() : null).catch(()=>null)
-]).then(([pl, p])=>{
+  fetch("data/progression.json").then(r=>r.ok ? r.json() : null).catch(()=>null),
+  fetch("data/log.json").then(r=>r.ok ? r.json() : null).catch(()=>null)
+]).then(([pl, p, lg])=>{
+  if(Array.isArray(lg)){ window.LOGDATES = new Set(lg.map(e=>e.date)); }
   if(pl && pl.rotation){ PLAN = pl; }
   if(p){
     window.PROG = p;
