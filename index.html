@@ -203,9 +203,9 @@ let PLAN = {
 const KEY = "ironLedger.v1";
 const TOKKEY = "ironLedger.token";
 const REPO_DISPATCH = "https://api.github.com/repos/chrisskinr/iron-ledger/dispatches";
-const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1, c3:1, b3:1, b4:1, s4:1, l2:1, s2:1, l3:1, s3:1, l5:1 };
-const REPTOP = { c1:8, c2:10, s1:8, b1:10, l1:8, c3:12, b3:15, b4:10, s4:15, l2:8, s2:15, l3:10, s3:15, l5:20 };
-const UNITS = { c1:"lb", c2:"lb/hand", s1:"lb/hand", b1:"lb/hand", l1:"lb", c3:"lb/hand", b3:"band lb", b4:"lb", s4:"band lb", l2:"lb", s2:"lb/hand", l3:"lb", s3:"lb/hand", l5:"lb" };
+const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1, c3:1, b3:1, b4:1, s4:1, l2:1, s2:1, l3:1, s3:1, l5:1, tg1:1, tg2:1, tg3:1, tg4:1, tg5:1, tg6:1, tg7:1, tg8:1 };
+const REPTOP = { c1:8, c2:10, s1:8, b1:10, l1:8, c3:12, b3:15, b4:10, s4:15, l2:8, s2:15, l3:10, s3:15, l5:20, tg1:10, tg2:10, tg3:12, tg4:10, tg5:8, tg6:8, tg7:8, tg8:15 };
+const UNITS = { c1:"lb", c2:"lb/hand", s1:"lb/hand", b1:"lb/hand", l1:"lb", c3:"lb/hand", b3:"band lb", b4:"lb", s4:"band lb", l2:"lb", s2:"lb/hand", l3:"lb", s3:"lb/hand", l5:"lb", tg1:"lb/hand", tg2:"lb/hand", tg3:"lb", tg4:"lb/hand", tg5:"lb", tg6:"lb/hand", tg7:"lb/hand", tg8:"lb/hand" };
 
 function todayKey(d){ const x = d || new Date(); return x.getFullYear()+"-"+String(x.getMonth()+1).padStart(2,"0")+"-"+String(x.getDate()).padStart(2,"0"); }
 function load(){ try{ return JSON.parse(localStorage.getItem(KEY)) || {}; }catch(e){ return {}; } }
@@ -297,9 +297,10 @@ function applyDay(){
   const rl = document.createElement("span"); rl.className="rd-label";
   rl.textContent = "DAY " + (tIdx+1) + " OF " + PLAN.rotation.length;
   rot.appendChild(rl);
-  document.getElementById("rehabSlot").innerHTML = todayPlan.rehab
-    ? '<div class="rehab-banner">\u26a0 Knee rehab rules: pain-free reps only. If anything sharp shows up, rack it and do the band + hip work instead \u2014 the day still counts.</div>'
-    : "";
+  let banners = "";
+  if(window.TRAVEL){ banners += '<div class="rehab-banner" style="color:var(--brass-hi); border-color:var(--brass-line); background:rgba(201,162,75,.08);">\ud83c\udfe8 Hotel mode through Sat \u2014 room version on top, gym version below the cut. Do one, check it off, Log Session. Basement weights are safe and waiting.</div>'; }
+  if(todayPlan.rehab){ banners += '<div class="rehab-banner">\u26a0 Knee rehab rules: pain-free reps only. If anything sharp shows up, rack it and do the band + hip work instead \u2014 the day still counts.</div>'; }
+  document.getElementById("rehabSlot").innerHTML = banners;
 }
 
 function exRow(e){
@@ -338,15 +339,17 @@ async function sendSession(noteEl){
   const tok = localStorage.getItem(TOKKEY);
   if(!tok){ noteEl.textContent = "No token saved \u2014 paste your GitHub token at the bottom of the page first (one time)."; return; }
   const picked = todayPlan.exercises.filter(e=>TRACKED[e.id] && rec.checks[e.id]);
-  if(!picked.length){ noteEl.textContent = "Check off the lifts you did first \u2014 then Log Session sends them all."; return; }
+  const anyChecked = todayPlan.exercises.some(e=>rec.checks[e.id]);
+  if(!picked.length && !anyChecked){ noteEl.textContent = "Check off what you did first \u2014 then Log Session puts today on the books."; return; }
   const entries = [];
   for(const e of picked){
     const ev = getEV(e.id);
     const w = parseFloat(ev.w);
-    if(isNaN(w)){ noteEl.textContent = "Enter a weight for " + e.name + "."; return; }
+    if(isNaN(w)) continue;
     const r = parseFloat(ev.r);
     entries.push({ lift: e.id, weight: w, reps: isNaN(r) ? "" : r });
   }
+  if(!entries.length){ entries.push({ lift: "session", weight: "", reps: "" }); }
   noteEl.textContent = "Sending " + entries.length + " lift" + (entries.length>1?"s":"") + "\u2026";
   try{
     const resp = await fetch(REPO_DISPATCH, {
@@ -464,7 +467,13 @@ Promise.all([
   fetch("data/log.json").then(r=>r.ok ? r.json() : null).catch(()=>null)
 ]).then(([pl, p, lg])=>{
   if(Array.isArray(lg)){ window.LOGDATES = new Set(lg.map(e=>e.date)); }
-  if(pl && pl.rotation){ PLAN = pl; }
+  if(pl && pl.rotation){
+    PLAN = pl;
+    if(pl.travel && todayKey() <= pl.travel.until){
+      window.TRAVEL = true;
+      PLAN = Object.assign({}, pl, { rotation: pl.travel.rotation, tiers: pl.travel.tiers || pl.tiers });
+    }
+  }
   if(p){
     window.PROG = p;
     if(Number.isInteger(p.currentDayIndex)) tIdx = p.currentDayIndex % PLAN.rotation.length;
