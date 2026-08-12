@@ -1,9 +1,9 @@
 {
   "weights": {
-    "c1": 140.0,
-    "c2": 45.0,
+    "c1": 145.0,
+    "c2": 50.0,
     "s1": 45.0,
-    "b1": 35.0,
+    "b1": 40.0,
     "l1": 57.5,
     "l2": null,
     "s2": null,
@@ -129,6 +129,6 @@
       "unit": "band lb"
     }
   },
-  "currentDayIndex": 0,
-  "lastAdvanceLogDate": "2026-08-10"
+  "currentDayIndex": 1,
+  "lastAdvanceLogDate": "2026-08-11"
 }
