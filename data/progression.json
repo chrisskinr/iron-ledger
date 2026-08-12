@@ -4,7 +4,16 @@
     "c2": 45.0,
     "s1": 45.0,
     "b1": 35.0,
-    "l1": 57.5
+    "l1": 57.5,
+    "l2": null,
+    "s2": null,
+    "l3": null,
+    "s3": null,
+    "l5": null,
+    "c3": null,
+    "b4": null,
+    "b3": null,
+    "s4": null
   },
   "lifts": {
     "c1": {
@@ -46,6 +55,78 @@
       "repBottom": 6,
       "increment": 2.5,
       "unit": "lb"
+    },
+    "l2": {
+      "name": "Romanian deadlift",
+      "alias": "rdl",
+      "repTop": 8,
+      "repBottom": 6,
+      "increment": 5,
+      "unit": "lb"
+    },
+    "s2": {
+      "name": "DB lateral raise",
+      "alias": "lateral",
+      "repTop": 15,
+      "repBottom": 12,
+      "increment": 5,
+      "unit": "lb/hand"
+    },
+    "l3": {
+      "name": "DB hip thrust",
+      "alias": "hipthrust",
+      "repTop": 10,
+      "repBottom": 8,
+      "increment": 5,
+      "unit": "lb"
+    },
+    "s3": {
+      "name": "Rear-delt flye",
+      "alias": "reardelt",
+      "repTop": 15,
+      "repBottom": 12,
+      "increment": 5,
+      "unit": "lb/hand"
+    },
+    "l5": {
+      "name": "Standing calf raise",
+      "alias": "calf",
+      "repTop": 20,
+      "repBottom": 15,
+      "increment": 5,
+      "unit": "lb"
+    },
+    "c3": {
+      "name": "DB flye",
+      "alias": "flye",
+      "repTop": 12,
+      "repBottom": 10,
+      "increment": 5,
+      "unit": "lb/hand"
+    },
+    "b4": {
+      "name": "DB pullover",
+      "alias": "pullover",
+      "repTop": 10,
+      "repBottom": 8,
+      "increment": 5,
+      "unit": "lb"
+    },
+    "b3": {
+      "name": "Band lat pulldown",
+      "alias": "latpulldown",
+      "repTop": 15,
+      "repBottom": 12,
+      "increment": 5,
+      "unit": "band lb"
+    },
+    "s4": {
+      "name": "Band face pull",
+      "alias": "facepull",
+      "repTop": 15,
+      "repBottom": 12,
+      "increment": 5,
+      "unit": "band lb"
     }
   },
   "currentDayIndex": 0,
