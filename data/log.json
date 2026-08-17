@@ -54,5 +54,54 @@
     "weight": 45.0,
     "worstSetReps": 10,
     "processed": true
+  },
+  {
+    "date": "2026-08-17",
+    "lift": "l1",
+    "weight": 57.5,
+    "worstSetReps": 8,
+    "processed": false
+  },
+  {
+    "date": "2026-08-17",
+    "lift": "s1",
+    "weight": 45.0,
+    "worstSetReps": 8,
+    "processed": false
+  },
+  {
+    "date": "2026-08-17",
+    "lift": "l2",
+    "weight": 135.0,
+    "worstSetReps": 3,
+    "processed": false
+  },
+  {
+    "date": "2026-08-17",
+    "lift": "s2",
+    "weight": 10.0,
+    "worstSetReps": 8,
+    "processed": false
+  },
+  {
+    "date": "2026-08-17",
+    "lift": "l3",
+    "weight": 45.0,
+    "worstSetReps": 10,
+    "processed": false
+  },
+  {
+    "date": "2026-08-17",
+    "lift": "s3",
+    "weight": 10.0,
+    "worstSetReps": 8,
+    "processed": false
+  },
+  {
+    "date": "2026-08-17",
+    "lift": "l5",
+    "weight": 135.0,
+    "worstSetReps": 20,
+    "processed": false
   }
 ]
