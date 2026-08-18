@@ -2,14 +2,14 @@
   "weights": {
     "c1": 145.0,
     "c2": 50.0,
-    "s1": 45.0,
+    "s1": 50.0,
     "b1": 40.0,
-    "l1": 57.5,
-    "l2": null,
-    "s2": null,
-    "l3": null,
-    "s3": null,
-    "l5": null,
+    "l1": 60.0,
+    "l2": 135.0,
+    "s2": 10.0,
+    "l3": 50.0,
+    "s3": 10.0,
+    "l5": 140.0,
     "c3": null,
     "b4": null,
     "b3": null,
@@ -129,6 +129,6 @@
       "unit": "band lb"
     }
   },
-  "currentDayIndex": 1,
-  "lastAdvanceLogDate": "2026-08-11"
+  "currentDayIndex": 0,
+  "lastAdvanceLogDate": "2026-08-17"
 }
