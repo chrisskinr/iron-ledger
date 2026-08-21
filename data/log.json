@@ -109,20 +109,20 @@
     "lift": "c1",
     "weight": 145.0,
     "worstSetReps": 8,
-    "processed": false
+    "processed": true
   },
   {
     "date": "2026-08-20",
     "lift": "b1",
     "weight": 40.0,
     "worstSetReps": 10,
-    "processed": false
+    "processed": true
   },
   {
     "date": "2026-08-20",
     "lift": "c2",
     "weight": 50.0,
     "worstSetReps": 10,
-    "processed": false
+    "processed": true
   }
 ]
