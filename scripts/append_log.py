@@ -8,10 +8,10 @@ ALIASES = {"bench": "c1", "incline": "c2", "ohp": "s1", "row": "b1", "squat": "l
 def today():
     return os.environ.get("DATE_OVERRIDE") or datetime.datetime.now(ZoneInfo("America/Chicago")).date().isoformat()
 
-def to_entry(lift, weight, reps):
+def to_entry(lift, weight, reps, date=None):
     lift = str(lift or "").strip().lower()
     return {
-        "date": today(),
+        "date": date or today(),
         "lift": ALIASES.get(lift, lift),
         "weight": float(weight) if weight not in (None, "") else None,
         "worstSetReps": int(float(reps)) if reps not in (None, "") else None,
@@ -22,7 +22,7 @@ new = []
 raw = os.environ.get("ENTRIES", "")
 if raw and raw not in ("null", "[]"):
     for e in json.loads(raw):
-        new.append(to_entry(e.get("lift"), e.get("weight"), e.get("reps")))
+        new.append(to_entry(e.get("lift"), e.get("weight"), e.get("reps"), e.get("date")))
 else:
     lift = os.environ.get("LIFT", "")
     if lift:
