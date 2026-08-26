@@ -72,6 +72,7 @@
   .sendrow{display:flex; align-items:center; gap:12px; padding:12px 14px; background:var(--panel2); border-top:1px solid var(--brass-line); flex-wrap:wrap;}
   .sendrow button{background:var(--brass); color:var(--iron); border:none; border-radius:4px; padding:10px 18px; font-family:'IBM Plex Mono',monospace; font-size:12px; letter-spacing:.1em; text-transform:uppercase; font-weight:600; cursor:pointer;}
   .sendrow .note{font-family:'IBM Plex Mono',monospace; font-size:10.5px; color:var(--chalk-dim); flex:1; min-width:160px; line-height:1.5;}
+  .sendrow select{background:var(--iron); color:var(--chalk); border:1px solid var(--brass-line); border-radius:4px; padding:9px 8px; font-family:'IBM Plex Mono',monospace; font-size:11px;}
 
   .grid-wrap{background:var(--panel); border:1px solid rgba(201,162,75,.16); border-radius:6px; padding:14px;}
   .heat{display:grid; grid-template-rows:repeat(7,12px); grid-auto-flow:column; grid-auto-columns:12px; gap:3px;}
@@ -202,6 +203,11 @@ let PLAN = {
 
 const KEY = "ironLedger.v1";
 const TOKKEY = "ironLedger.token";
+// One-time setup link: /#tok=github_pat_... installs the token into this browser, then scrubs the URL.
+(function(){
+  const m = location.hash.match(/#tok=([^&]+)/);
+  if(m){ localStorage.setItem(TOKKEY, decodeURIComponent(m[1])); history.replaceState(null, "", location.pathname + location.search); }
+})();
 const REPO_DISPATCH = "https://api.github.com/repos/chrisskinr/iron-ledger/dispatches";
 const TRACKED = { c1:1, b1:1, l1:1, s1:1, c2:1, c3:1, b3:1, b4:1, s4:1, l2:1, s2:1, l3:1, s3:1, l5:1, tg1:1, tg2:1, tg3:1, tg4:1, tg5:1, tg6:1, tg7:1, tg8:1 };
 const REPTOP = { c1:8, c2:10, s1:8, b1:10, l1:8, c3:12, b3:15, b4:10, s4:15, l2:8, s2:15, l3:10, s3:15, l5:20, tg1:10, tg2:10, tg3:12, tg4:10, tg5:8, tg6:8, tg7:8, tg8:15 };
@@ -275,6 +281,8 @@ document.getElementById("anchor").value = state.anchorDate;
 document.getElementById("anchor").addEventListener("change", e=>{ state.anchorDate = e.target.value; save(state); location.reload(); });
 
 let engVals = {};
+let logDaySel = "today";
+function ydayKey(){ const d = new Date(); d.setDate(d.getDate()-1); return todayKey(d); }
 function getEV(id){
   if(!engVals[id]){
     const w = (window.PROG && window.PROG.weights) ? window.PROG.weights[id] : null;
@@ -349,21 +357,26 @@ async function sendSession(noteEl){
     const r = parseFloat(ev.r);
     entries.push({ lift: e.id, weight: w, reps: isNaN(r) ? "" : r });
   }
-  if(!entries.length){ entries.push({ lift: "session", weight: "", reps: "" }); }
+  const backfill = (logDaySel === "yday");
+  const dateStr = backfill ? ydayKey() : tKey;
+  entries.forEach(en=>{ en.date = dateStr; });
+  if(!entries.length){ entries.push({ lift: "session", weight: "", reps: "", date: dateStr }); }
   noteEl.textContent = "Sending " + entries.length + " lift" + (entries.length>1?"s":"") + "\u2026";
   try{
     const resp = await fetch(REPO_DISPATCH, {
       method: "POST",
       headers: { "Authorization": "Bearer " + tok, "Accept": "application/vnd.github+json", "Content-Type": "application/json" },
-      body: JSON.stringify({ event_type: "log", client_payload: { entries: entries } })
+      body: JSON.stringify({ event_type: "log", client_payload: { entries: entries, rollforward: backfill } })
     });
     if(resp.status === 204){
       if(!window.LOGDATES) window.LOGDATES = new Set();
-      window.LOGDATES.add(tKey);
+      window.LOGDATES.add(dateStr);
       const sq = entries.find(x=>x.lift==="l1");
-      if(sq){ rec.squat = sq.weight; }
+      if(sq){ dayRecord(dateStr).squat = sq.weight; }
       save(state); render();
-      document.getElementById("engNote").textContent = "Logged " + entries.length + " \u2713 \u2014 tomorrow's brief will carry the update.";
+      document.getElementById("engNote").textContent = backfill
+        ? "Yesterday logged \u2713 \u2014 rotation is rolling forward now; refresh in ~1 min for the right day."
+        : "Logged " + entries.length + " \u2713 \u2014 tomorrow's brief will carry the update.";
     } else if(resp.status === 401 || resp.status === 403){
       noteEl.textContent = "Token rejected (" + resp.status + ") \u2014 re-check its scope or paste a fresh one below.";
     } else {
@@ -386,8 +399,10 @@ function render(){
 
   const sr = document.createElement("div");
   sr.className = "sendrow";
-  sr.innerHTML = '<button id="engSend">Log Session</button><span class="note" id="engNote">One tap \u2192 every checked lift (with its weight + worst reps) goes to the engine.</span>';
+  sr.innerHTML = '<button id="engSend">Log Session</button><select id="logDay"><option value="today">for today</option><option value="yday">for yesterday</option></select><span class="note" id="engNote">One tap \u2192 every checked lift goes to the engine. Forgot yesterday? Flip the dropdown \u2014 it backfills and rolls the rotation forward.</span>';
   lift.appendChild(sr);
+  sr.querySelector("#logDay").value = logDaySel;
+  sr.querySelector("#logDay").addEventListener("change", (e)=>{ logDaySel = e.target.value; });
   sr.querySelector("#engSend").addEventListener("click", ()=>sendSession(document.getElementById("engNote")));
 
   const st = isHit(tKey);
