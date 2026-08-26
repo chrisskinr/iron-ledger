@@ -21,10 +21,13 @@ jobs:
           WEIGHT: ${{ github.event.client_payload.weight }}
           REPS: ${{ github.event.client_payload.reps }}
         run: python scripts/append_log.py
+      - name: Roll rotation forward (backfill)
+        if: ${{ github.event.client_payload.rollforward == true }}
+        run: python scripts/build_today.py
       - name: Commit
         run: |
           git config user.name "iron-ledger-bot"
           git config user.email "actions@github.com"
-          git add data/log.json
+          git add data/ today.txt
           git diff --cached --quiet || git commit -m "Rep log"
           git push
