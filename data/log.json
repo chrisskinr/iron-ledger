@@ -130,6 +130,6 @@
     "lift": "s1",
     "weight": 55.0,
     "worstSetReps": 8,
-    "processed": false
+    "processed": true
   }
 ]
