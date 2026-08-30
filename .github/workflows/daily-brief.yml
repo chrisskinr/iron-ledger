@@ -1,8 +1,8 @@
 name: Build daily workout brief
 on:
-  schedule:
-    # 10:15 UTC = 5:15 AM Central (CDT). Runs before your Shortcut fires.
-    - cron: "15 10 * * *"
+  # Schedule retired 2026-08-29: Achilles (local openclaw agent) now builds and
+  # delivers the morning brief at 6:00 AM via ntfy. Manual dispatch kept as a
+  # fallback if the local agent is down.
   workflow_dispatch: {}
 
 permissions:

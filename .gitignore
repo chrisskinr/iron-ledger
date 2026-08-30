@@ -1,0 +1,11 @@
+# openclaw agent scaffolding — Achilles lives here, the repo doesn't need to know
+AGENTS.md
+HEARTBEAT.md
+IDENTITY.md
+SOUL.md
+TOOLS.md
+USER.md
+MEMORY.md
+memory/
+openclaw-workspace-state.json
+reports/
