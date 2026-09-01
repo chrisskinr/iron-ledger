@@ -151,13 +151,13 @@
     "lift": "l1",
     "weight": 65.0,
     "worstSetReps": 8,
-    "processed": false
+    "processed": true
   },
   {
     "date": "2026-08-31",
     "lift": "s1",
     "weight": 60.0,
     "worstSetReps": 8,
-    "processed": false
+    "processed": true
   }
 ]
